@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix Recommendation System</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <main class="hero">
+        <nav class="navbar">
+            <div class="logo">NETFLIX</div>
+            <div class="nav-label">CONTENT-BASED RECOMMENDER</div>
+        </nav>
+
+        <section class="hero-content">
+            <p class="eyebrow">PERSONALIZED DISCOVERY</p>
+
+            <h1>Find your next<br><span>favorite watch.</span></h1>
+
+            <p class="description">
+                Enter a Netflix movie or TV show you enjoyed and get
+                recommendations based on its genre, cast, director,
+                and description.
+            </p>
+
+            <form class="search-form" action="/about" method="post">
+                <label for="moviename">Movie or TV show</label>
+
+                <div class="input-row">
+                    <div class="autocomplete-container">
+
+                        <input
+                            id="moviename"
+                            type="text"
+                            name="moviename"
+                            value="{{ searched_title|default('') }}"
+                            placeholder="e.g. PK, Stranger Things..."
+                            autocomplete="off"
+                            required
+                        >
+
+                        <div id="suggestions" class="suggestions"></div>
+
+                    </div>
+
+                    <button type="submit">Recommend</button>
+                </div>
+            </form>
+
+            {% if error %}
+                <div class="error-message" role="alert">
+                    {{ error }}
+                </div>
+            {% endif %}
+
+            <div class="tech-stack">
+                <span>TF-IDF</span>
+                <span>Cosine Similarity</span>
+                <span>Flask</span>
+            </div>
+        </section>
+        
+        <footer>
+            <p>
+                <strong>Important:</strong> The dataset contains titles available up to 2021.
+                Movies and TV shows released after 2021 may not be available.
+            </p>
+            <p>Content-Based Netflix Recommendation System</p>
+        </footer>
+    </main>
+</body>
+<script>
+const input = document.getElementById("moviename");
+const suggestions = document.getElementById("suggestions");
+
+input.addEventListener("input", async function () {
+
+    const query = input.value.trim();
+
+    if (query.length < 2) {
+        suggestions.innerHTML = "";
+        suggestions.style.display = "none";
+        return;
+    }
+
+    const response = await fetch(
+        `/search?q=${encodeURIComponent(query)}`
+    );
+
+    const titles = await response.json();
+
+    suggestions.innerHTML = "";
+
+    if (titles.length === 0) {
+        suggestions.style.display = "none";
+        return;
+    }
+
+    titles.forEach(title => {
+
+        const item = document.createElement("div");
+
+        item.classList.add("suggestion-item");
+        item.textContent = title;
+
+        item.addEventListener("click", function () {
+            input.value = title;
+            suggestions.innerHTML = "";
+            suggestions.style.display = "none";
+        });
+
+        suggestions.appendChild(item);
+    });
+
+    suggestions.style.display = "block";
+});
+</script>
+</html>

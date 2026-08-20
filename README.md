@@ -1,4 +1,4 @@
-# Netflix-Content-Based-Recommendation-System
+# Netflix Content-Based Recommendation System
 
 A Flask web application that recommends Netflix movies and TV shows based on the content of a title selected by the user.
 
@@ -93,6 +93,7 @@ This is a content-based recommender. It does not use user ratings, watch history
 ## Future Improvements
 
 - Movie posters through a metadata API
+- Autocomplete search
 - Genre/type filters
 - Hybrid collaborative + content-based recommendations
 - User profiles

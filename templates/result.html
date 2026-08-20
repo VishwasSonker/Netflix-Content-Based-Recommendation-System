@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendations | Netflix Recommender</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/result.css') }}">
+</head>
+
+<body>
+    <main class="results-page">
+        <nav class="navbar">
+            <a href="/" class="logo">NETFLIX</a>
+            <a href="/" class="back-link">← Search again</a>
+        </nav>
+
+        <section class="results-header">
+            <p class="eyebrow">RECOMMENDATIONS</p>
+
+            <h1>Because you watched<br>
+                <span>{{ searched_title }}</span>
+            </h1>
+
+            <p>
+                Here are the titles most similar to your selection,
+                based on content similarity.
+            </p>
+        </section>
+
+        <section class="recommendations-grid">
+            {% for item in recommendations %}
+                <article class="recommendation-card">
+                    <div class="rank">{{ item.rank }}</div>
+
+                    <div class="card-content">
+                        <h2>{{ item.title }}</h2>
+
+                        <div class="match-row">
+                            <span class="match-label">CONTENT MATCH</span>
+                            <span class="match-score">
+                                {{ item.similarity }}%
+                            </span>
+                        </div>
+
+                        <div class="progress-bar">
+                            <div
+                                class="progress"
+                                style="width: {{ item.similarity }}%"
+                            ></div>
+                        </div>
+                    </div>
+                </article>
+            {% endfor %}
+        </section>
+
+        {% if not recommendations %}
+            <div class="empty-state">
+                <h2>No recommendations found.</h2>
+                <a href="/">Try another title</a>
+            </div>
+        {% endif %}
+    </main>
+</body>
+</html>
